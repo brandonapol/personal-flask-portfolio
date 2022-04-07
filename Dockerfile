@@ -15,6 +15,8 @@ RUN chmod +x boot.sh
 ENV FLASK_APP=app
 ENV FLASK_ENV=development
 
+EXPOSE 5000
+
 RUN ./boot.sh
 
 CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0"]
