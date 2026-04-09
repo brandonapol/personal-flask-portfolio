@@ -1,22 +1,15 @@
-FROM python
+FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt requirements.txt 
-RUN python -m venv venv 
-RUN venv/bin/pip install -r requirements.txt 
-RUN pip3 install -r requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app app 
-COPY config.py config.py 
-COPY boot.sh boot.sh 
-RUN chmod +x boot.sh 
+COPY app app
+COPY config.py config.py
 
 ENV FLASK_APP=app
-ENV FLASK_ENV=development
 
 EXPOSE 5000
 
-RUN ./boot.sh
-
-CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "app:app"]
